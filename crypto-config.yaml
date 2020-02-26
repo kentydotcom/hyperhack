@@ -1,0 +1,74 @@
+#  Dr Kent G Lau
+#  Hyperhack 2020
+
+
+OrdererOrgs:
+
+  - Name: Orderer
+    Domain: regulator.com
+
+    Specs:
+      - Hostname: orderer
+      - Hostname: orderer2
+      - Hostname: orderer3
+      - Hostname: orderer4
+      - Hostname: orderer5
+
+
+PeerOrgs:
+
+  - Name: Regulator
+    Domain: regulator.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+
+  - Name: Manufacturer
+    Domain: manufacturer.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+
+  - Name: Distributor
+    Domain: distributor.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+
+  - Name: ShippingAgent
+    Domain: shippingagent.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+
+  - Name: Pharmacy
+    Domain: pharmacy.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+
+  - Name: Doctor
+    Domain: doctor.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+
+  - Name: Patient
+    Domain: patient.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1

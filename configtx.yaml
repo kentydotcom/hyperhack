@@ -1,0 +1,372 @@
+#  Dr Kent G Lau
+#  Hyperhack 2020
+
+Organizations:
+
+    - &OrdererOrg
+
+        Name: OrdererOrg
+
+        ID: OrdererMSP
+
+        MSPDir: crypto-config/ordererOrganizations/regulator.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('OrdererMSP.admin')"
+
+
+    - &Regulator
+
+        Name: RegulatorMSP
+
+        ID: RegulatorMSP
+
+        MSPDir: crypto-config/peerOrganizations/regulator.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('RegulatorMSP.admin', 'RegulatorMSP.peer', 'RegulatorMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('RegulatorMSP.admin', 'RegulatorMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('RegulatorMSP.admin')"
+
+        AnchorPeers:
+            - Host: peer0.regulator.com
+              Port: 7051
+
+
+    - &Manufacturer
+
+        Name: ManufacturerMSP
+
+        ID: ManufacturerMSP
+
+        MSPDir: crypto-config/peerOrganizations/manufacturer.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('ManufacturerMSP.admin', 'ManufacturerMSP.peer', 'ManufacturerMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('ManufacturerMSP.admin', 'ManufacturerMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('ManufacturerMSP.admin')"
+
+        AnchorPeers:
+            - Host: peer0.manufacturer.com
+              Port: 9051
+
+
+    - &Distributor
+
+        Name: DistributorMSP
+
+        ID: DistributorMSP
+
+        MSPDir: crypto-config/peerOrganizations/distributor.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('DistributorMSP.admin', 'DistributorMSP.peer', 'DistributorMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('DistributorMSP.admin', 'DistributorMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('DistributorMSP.admin')"
+
+        AnchorPeers:
+            - Host: peer0.distributor.com
+              Port: 11051
+
+
+    - &ShippingAgent
+
+        Name: ShippingAgentMSP
+
+        ID: ShippingAgentMSP
+
+        MSPDir: crypto-config/peerOrganizations/shippingagent.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('ShippingAgentMSP.admin', 'ShippingAgentMSP.peer', 'ShippingAgentMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('ShippingAgentMSP.admin', 'ShippingAgentMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('ShippingAgentMSP.admin')"
+
+        AnchorPeers:
+            - Host: peer0.shippingagent.com
+              Port: 13051
+
+
+    - &Pharmacy
+
+        Name: PharmacyMSP
+
+        ID: PharmacyMSP
+
+        MSPDir: crypto-config/peerOrganizations/pharmacy.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('PharmacyMSP.admin', 'PharmacyMSP.peer', 'PharmacyMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('PharmacyMSP.admin', 'PharmacyMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('PharmacyMSP.admin')"
+
+        AnchorPeers:
+            - Host: peer0.pharmacy.com
+              Port: 15051
+
+
+    - &Doctor
+
+        Name: DoctorMSP
+
+        ID: DoctorMSP
+
+        MSPDir: crypto-config/peerOrganizations/doctor.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('DoctorMSP.admin', 'DoctorMSP.peer', 'DoctorMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('DoctorMSP.admin', 'DoctorMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('DoctorMSP.admin')"
+
+        AnchorPeers:
+            - Host: peer0.doctor.com
+              Port: 17051
+
+
+    - &Patient
+
+        Name: PatientMSP
+
+        ID: PatientMSP
+
+        MSPDir: crypto-config/peerOrganizations/patient.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('PatientMSP.admin', 'PatientMSP.peer', 'PatientMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('PatientMSP.admin', 'PatientMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('PatientMSP.admin')"
+
+        AnchorPeers:
+            - Host: peer0.patient.com
+              Port: 19051
+
+
+
+
+Capabilities:
+
+    Channel: &ChannelCapabilities
+
+        V1_3: true
+
+    Orderer: &OrdererCapabilities
+
+        V1_1: true
+
+    Application: &ApplicationCapabilities
+
+        V1_3: true
+
+        V1_2: false
+
+        V1_1: false
+
+
+Application: &ApplicationDefaults
+
+    Organizations:
+
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+
+Orderer: &OrdererDefaults
+
+    OrdererType: solo
+    # OrdererType: kafka
+
+    Addresses:
+        - orderer.regulator.com:7050
+        # - kafka1.regulator.com:9092
+        # - kafka2.regulator.com:9092
+
+    BatchTimeout: 2s
+
+    BatchSize:
+
+        MaxMessageCount: 10
+
+        AbsoluteMaxBytes: 99 MB
+
+        PreferredMaxBytes: 512 KB
+
+    Kafka:
+
+        Brokers:
+            - 127.0.0.1:9092
+
+    Organizations:
+
+    Policies:
+
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+
+Channel: &ChannelDefaults
+
+    Policies:
+
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    Capabilities:
+        <<: *ChannelCapabilities
+
+
+Profiles:
+
+    OrdererGenesis:
+        <<: *ChannelDefaults
+
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
+
+        Consortiums:
+            SupplyChainConsortium:
+                Organizations:
+                    - *Regulator
+                    - *Manufacturer
+                    - *Distributor
+                    - *ShippingAgent
+                    - *Pharmacy
+                    - *Doctor
+                    - *Patient
+
+
+    ItemChannel:
+        Consortium: SupplyChainConsortium
+        <<: *ChannelDefaults
+
+        Application:
+            <<: *ApplicationDefaults
+
+            Organizations:
+                - *Regulator
+                - *Manufacturer
+                - *Distributor
+                - *ShippingAgent
+                - *Pharmacy
+                - *Doctor
+                - *Patient
+
+            Capabilities:
+                <<: *ApplicationCapabilities
+
+
+    MedicalChannel:
+        Consortium: SupplyChainConsortium
+        <<: *ChannelDefaults
+
+        Application:
+            <<: *ApplicationDefaults
+
+            Organizations:
+                - *Regulator
+                - *Pharmacy
+                - *Doctor
+
+            Capabilities:
+                <<: *ApplicationCapabilities
+
+    PatientChannel:
+        Consortium: SupplyChainConsortium
+        <<: *ChannelDefaults
+
+        Application:
+            <<: *ApplicationDefaults
+
+            Organizations:
+                - *Pharmacy
+                - *Doctor
+                - *Patient
+
+            Capabilities:
+                <<: *ApplicationCapabilities
