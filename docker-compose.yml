@@ -6,37 +6,35 @@
 
 version: '2'
 
-volumes:
-  orderer.regulator.com:
-  peer0.regulator.com:
-  peer0.manufacturer.com:
-  peer0.distributor.com:
-  peer0.shippingagent.com:
-  peer0.pharmacy.com:
-  peer0.doctor.com:
-  peer0.patient.com:
+# volumes:
+#   orderer.regulator.com:
+#   peer0.regulator.com:
+#   peer0.manufacturer.com:
+#   peer0.distributor.com:
+#   peer0.shippingagent.com:
+#   peer0.pharmacy.com:
+#   peer0.doctor.com:
+#   peer0.regulator.com:
 
 networks:
   basic:
 
 services:
-
-
-  # ca.regulator.com:
-  #   image: hyperledger/fabric-ca:1.4.0
-  #   environment:
-  #     - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-  #     - FABRIC_CA_SERVER_CA_NAME=ca.regulator.com
-  #     - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.regulator.com-cert.pem
-  #     - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/8922cc1ea259cad3e24ebb9804af6a23f7894b2691b7b06dc887ced96966c298_sk
-  #   ports:
-  #     - "7054:7054"
-  #   command: sh -c 'fabric-ca-server start -b admin:adminpw'
-  #   volumes:
-  #     - ./crypto-config/peerOrganizations/regulator.com/ca/:/etc/hyperledger/fabric-ca-server-config
-  #   container_name: ca.regulator.com
-  #   networks:
-  #     - basic
+  ca.regulator.com:
+    image: hyperledger/fabric-ca:1.4.0
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.regulator.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.regulator.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/d08848b70189429ff4caae0ea7cce9009a89ca2698fc94a004321a62ce5e3ac7_sk
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw'
+    volumes:
+      - ./crypto-config/peerOrganizations/regulator.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca.regulator.com
+    networks:
+      - basic
 
   orderer.regulator.com:
     container_name: orderer.regulator.com
@@ -59,7 +57,6 @@ services:
     networks:
       - basic
 
-
   peer0.regulator.com:
     container_name: peer0.regulator.com
     image: hyperledger/fabric-peer:1.4.0
@@ -76,7 +73,7 @@ services:
       # # the following setting starts chaincode containers on the same
       # # bridge network as the peers
       # # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.regulator.com:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
@@ -101,7 +98,6 @@ services:
       - couchdb.peer0.regulator.com
     networks:
       - basic
-
 
   couchdb.peer0.regulator.com:
     container_name: couchdb.peer0.regulator.com
@@ -135,7 +131,7 @@ services:
       # # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.manufacturer.com:9984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.manufacturer.com:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
       # provide the credentials for ledger to connect to CouchDB.  The username and password must
       # match the username and password set for the associated CouchDB.
@@ -145,8 +141,7 @@ services:
    # command: peer node start
     command: peer node start --peer-chaincodedev=true
     ports:
-      - 9051:7051
-      - 9052:7052
+      - 9051:9051
       - 9053:7053
     volumes:
         - /var/run/:/host/var/run/
@@ -174,8 +169,6 @@ services:
       - basic
 
 
-
-
   peer0.distributor.com:
     container_name: peer0.distributor.com
     image: hyperledger/fabric-peer:1.4.0
@@ -194,7 +187,7 @@ services:
       # # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.distributor.com:11984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.distributor.com:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
       # provide the credentials for ledger to connect to CouchDB.  The username and password must
       # match the username and password set for the associated CouchDB.
@@ -204,8 +197,7 @@ services:
    # command: peer node start
     command: peer node start --peer-chaincodedev=true
     ports:
-      - 11051:7051
-      - 11052:7052
+      - 11051:11051
       - 11053:7053
     volumes:
         - /var/run/:/host/var/run/
@@ -266,8 +258,7 @@ services:
    # command: peer node start
     command: peer node start --peer-chaincodedev=true
     ports:
-      - 13051:7051
-      - 13052:7052
+      - 13051:13051
       - 13053:7053
     volumes:
         - /var/run/:/host/var/run/
@@ -313,7 +304,7 @@ services:
       # # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.pharmacy.com:15984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.pharmacy.com:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
       # provide the credentials for ledger to connect to CouchDB.  The username and password must
       # match the username and password set for the associated CouchDB.
@@ -323,8 +314,7 @@ services:
    # command: peer node start
     command: peer node start --peer-chaincodedev=true
     ports:
-      - 15051:7051
-      - 15052:7052
+      - 15051:15051
       - 15053:7053
     volumes:
         - /var/run/:/host/var/run/
@@ -370,7 +360,7 @@ services:
       # # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.doctor.com:15984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.doctor.com:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
       # provide the credentials for ledger to connect to CouchDB.  The username and password must
       # match the username and password set for the associated CouchDB.
@@ -380,8 +370,7 @@ services:
    # command: peer node start
     command: peer node start --peer-chaincodedev=true
     ports:
-      - 17051:7051
-      - 17052:7052
+      - 17051:17051
       - 17053:7053
     volumes:
         - /var/run/:/host/var/run/
@@ -429,7 +418,7 @@ services:
       # # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.patient.com:19984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.patient.com:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
       # provide the credentials for ledger to connect to CouchDB.  The username and password must
       # match the username and password set for the associated CouchDB.
@@ -439,8 +428,7 @@ services:
    # command: peer node start
     command: peer node start --peer-chaincodedev=true
     ports:
-      - 19051:7051
-      - 19052:7052
+      - 19051:19051
       - 19053:7053
     volumes:
         - /var/run/:/host/var/run/
@@ -468,6 +456,7 @@ services:
       - basic
 
 
+
   cli:
     container_name: cli
     image: hyperledger/fabric-tools:1.4.0
@@ -478,23 +467,22 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - CORE_PEER_ID=cli
       - CORE_PEER_ADDRESS=peer0.regulator.com:7051
-      - CORE_PEER_LOCALMSPID=Regulator
+      - CORE_PEER_LOCALMSPID=RegulatorMSP
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/regulator.com/users/Admin@regulator.com/msp
       - CORE_CHAINCODE_KEEPALIVE=10
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
     volumes:
         - /var/run/:/host/var/run/
-        - ./../chaincode/:/opt/gopath/src/github.com/
+        - ./chaincode/:/opt/gopath/src/github.com/
         - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-    depends_on:
-      - orderer.regulator.com
-      - peer0.regulator.com
-      - peer0.manufacturer.com
-      - peer0.distributor.com
-      - peer0.shippingagent.com
-      - peer0.pharmacy.com
-      - peer0.doctor.com
-      - peer0.patient.com
+        - ./config:/etc/hyperledger/configtx
+
     networks:
-      - basic
+        - basic
+
+
+    #depends_on:
+    #  - orderer.regulator.com
+    #  - peer0.regulator.com
+    #  - couchdb.peer0.regulator.com
